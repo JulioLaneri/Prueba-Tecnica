@@ -1,19 +1,13 @@
-
-FROM maven:3.8.5-eclipse-temurin-17 AS build
-
+# Etapa 1: Construcción
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
-
-COPY . .
-
+COPY pom.xml ./
+COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:17-jre
-
+# Etapa 2: Ejecución
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
-
+COPY --from=builder /app/target/ms-ventas-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8082
-
-# Comando para ejecutar la aplicación
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -53,12 +53,13 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    public void updateStock(String productId, int quantity) {
+    public ProductDto updateStock(String productId, Integer quantity) {
         ProductDto product = getProduct(productId);
         if (product.getQuantity() < quantity){
             throw new BadRequestException("Stock insuficiente");
         }
         product.setQuantity(product.getQuantity() - quantity);
         productDao.save(productMapper.toEntity(product));
+        return product;
     }
 }

@@ -33,4 +33,11 @@ public class ProductController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     List<ProductDto> getAll() { return productService.getAllProducts(); }
+
+
+    @PutMapping("/{productId}/{quantity}")
+    @ResponseStatus(HttpStatus.OK)
+    ProductDto putById(@PathVariable String productId, @PathVariable Integer quantity) {
+        return productService.updateStock(productId, quantity);
+    }
 }
