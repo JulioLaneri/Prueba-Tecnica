@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: prueba-tecnica
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:4.0.4-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - "15672:15672"  # Interfaz de gestión
+      - "5672:5672"    # Puerto estándar de RabbitMQ
+    networks:
+      - backend
+
+  # Microservicio Stock
+  ms-stock:
+    build:
+      context: ./ms-stock
+    container_name: ms-stock
+    environment:
+      - SPRING_APPLICATION_NAME=ms-stock
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/prueba-tecnica
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=12345678
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_USERNAME=admin
+      - SPRING_RABBITMQ_PASSWORD=admin
+      - SERVER_PORT=8081
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  # Microservicio Ventas
+  ms-ventas:
+    build:
+      context: ./ms-ventas
+    container_name: ms-ventas
+    environment:
+      - SPRING_APPLICATION_NAME=ms-ventas
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_USERNAME=admin
+      - SPRING_RABBITMQ_PASSWORD=admin
+      - SERVER_PORT=8082
+      - MS_STOCK_BASE_URL=http://ms-stock:8081/api/stock
+    ports:
+      - "8082:8082"
+    networks:
+      - backend
+    depends_on:
+      - rabbitmq
+      - ms-stock
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:

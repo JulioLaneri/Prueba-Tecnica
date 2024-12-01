@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/stock")
 public class ProductController {
@@ -27,4 +29,8 @@ public class ProductController {
     ProductDto getById(@PathVariable String productId) {
         return productService.getProduct(productId);
     }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    List<ProductDto> getAll() { return productService.getAllProducts(); }
 }

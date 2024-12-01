@@ -3,6 +3,7 @@ package com.api.msstock.services;
 import com.api.msstock.daos.ProductDao;
 import com.api.msstock.dtos.ProductDto;
 import com.api.msstock.entitys.ProductEntity;
+import com.api.msstock.exceptions.BadRequestException;
 import com.api.msstock.exceptions.NotFoundException;
 import com.api.msstock.interfaces.IProductService;
 import com.api.msstock.utils.mappers.ProductMapper;
@@ -10,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +41,24 @@ public class ProductServiceImpl implements IProductService {
         } else {
             throw new NotFoundException("Producto no encontrado");
         }
+    }
+
+    @Override
+    public List<ProductDto> getAllProducts() {
+        List<ProductEntity> products = productDao.findAll();
+        return products.stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
+
+
+    @Override
+    public void updateStock(String productId, int quantity) {
+        ProductDto product = getProduct(productId);
+        if (product.getQuantity() < quantity){
+            throw new BadRequestException("Stock insuficiente");
+        }
+        product.setQuantity(product.getQuantity() - quantity);
+        productDao.save(productMapper.toEntity(product));
     }
 }
