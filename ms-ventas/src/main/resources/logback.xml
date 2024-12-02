@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- Ruta del archivo de logs general -->
-    <property name="LOG_FILE" value="./logs/stock-logs.log" />
+    <property name="LOG_FILE" value="./logs/ventas-logs.log" />
 
     <!-- Appender general para archivo -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
@@ -21,6 +21,21 @@
         </encoder>
     </appender>
 
+    <!-- Appender específico para VentasConfirmListener -->
+    <appender name="VENTAS_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/ventas_confirm.log</file>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- Logger específico para VentasConfirmListener -->
+    <logger name="com.api.msventas.utils.rabbitmq.VentasConfirmListener" level="INFO" additivity="false">
+        <appender-ref ref="VENTAS_FILE" />
+    </logger>
 
     <!-- Configuración general del nivel root -->
     <root level="INFO">

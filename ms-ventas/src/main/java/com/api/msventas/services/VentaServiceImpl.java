@@ -20,7 +20,7 @@ public class VentaServiceImpl implements IVentaService {
     private final RestTemplate restTemplate;
 
     @Value("${ms-stock.base-url}")
-    private String msStockBaseUrl;
+    String msStockBaseUrl;
 
     @Autowired
     public VentaServiceImpl(RabbitMqSender rabbitMqSender, RestTemplate restTemplate) {

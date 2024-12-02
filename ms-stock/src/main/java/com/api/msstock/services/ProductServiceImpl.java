@@ -61,8 +61,8 @@ public class ProductServiceImpl implements IProductService {
         if (product.getQuantity() > producto.getQuantity()) {
             throw new BadRequestException("Stock insuficiente");
         }
-        product.setQuantity(producto.getQuantity() - product.getQuantity());
-        productDao.save(productMapper.toEntity(product));
-        return product;
+        producto.setQuantity(producto.getQuantity() - product.getQuantity());
+        productDao.save(productMapper.toEntity(producto));
+        return producto;
     }
 }

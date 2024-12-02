@@ -24,7 +24,7 @@ public class VentasController {
         return ventaService.getAllProducts();
     }
 
-    @GetMapping("/catalogo")
+    @GetMapping("/catalogo/{productId}")
     ProductDto getById(@PathVariable String productId) {
         return ventaService.getProductById(productId);
     }

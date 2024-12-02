@@ -12,6 +12,6 @@ public class VentasConfirmListener {
 
     @RabbitListener(queues = "ventas_confirm_queue")
     public void recibirConfirmacion(Map<String, Object> mensaje) {
-        log.warn("Venta confirmada: {}", mensaje);
+        log.info("Venta confirmada: {}", mensaje);
     }
 }
