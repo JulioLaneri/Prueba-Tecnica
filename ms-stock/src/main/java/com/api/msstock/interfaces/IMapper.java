@@ -6,7 +6,7 @@ import com.api.msstock.dtos.ProductDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface IMapper <E extends AbstractEntity, D extends ProductDto> {
+public interface IMapper <E extends AbstractEntity, D extends AbstractDto> {
     public E toEntity(D dto);
     public D toDto(E entity);
 }

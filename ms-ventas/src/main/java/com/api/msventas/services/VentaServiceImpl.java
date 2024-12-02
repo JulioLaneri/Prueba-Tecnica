@@ -44,11 +44,10 @@ public class VentaServiceImpl implements IVentaService {
     @Override
     public String procesarVenta(ProductDto producto) {
         ProductDto product = restTemplate.getForEntity(msStockBaseUrl + "/" + producto.getProductId(), ProductDto.class).getBody();
-        System.out.println(product);
         if (product == null || product.getQuantity() < producto.getQuantity() ) {
-            throw new BadRequestException("El producto no se puede ser negativo");
+            throw new BadRequestException("Stock insuficiente");
         }
-        rabbitMqSender.enviarVenta(product);
+        rabbitMqSender.enviarVenta(producto);
         return "Se realizó la venta";
     }
 }

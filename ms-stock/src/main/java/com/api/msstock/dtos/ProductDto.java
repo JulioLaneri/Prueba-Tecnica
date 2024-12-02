@@ -5,14 +5,14 @@ import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class ProductDto implements Serializable {
+public class ProductDto extends AbstractDto {
     private String productId;
     private String productName;
-    @Min(value = 0, message = "La cantidad debe ser mayor o igual que cero")
+    @Min(value = 1, message = "La cantidad debe ser mayor a 1")
     private Integer quantity;
 
 }

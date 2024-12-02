@@ -2,6 +2,7 @@ package com.api.msstock.controllers;
 
 import com.api.msstock.dtos.ProductDto;
 import com.api.msstock.interfaces.IProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ProductDto create(@RequestBody ProductDto productDto) {
+    ProductDto create(@Valid @RequestBody ProductDto productDto) {
         return productService.createProduct(productDto);
     }
 
@@ -34,10 +35,4 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     List<ProductDto> getAll() { return productService.getAllProducts(); }
 
-
-    @PutMapping("/{productId}/{quantity}")
-    @ResponseStatus(HttpStatus.OK)
-    ProductDto putById(@PathVariable String productId, @PathVariable Integer quantity) {
-        return productService.updateStock(productId, quantity);
-    }
 }

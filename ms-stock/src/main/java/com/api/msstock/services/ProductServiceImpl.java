@@ -46,19 +46,22 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductDto> getAllProducts() {
         List<ProductEntity> products = productDao.findAll();
-        return products.stream()
-                .map(productMapper::toDto)
-                .toList();
+        if (!products.isEmpty()) {
+            return products.stream()
+                    .map(productMapper::toDto)
+                    .toList();
+        }
+        throw new NotFoundException("No hay productos disponibles");
     }
 
 
     @Override
-    public ProductDto updateStock(String productId, Integer quantity) {
-        ProductDto product = getProduct(productId);
-        if (product.getQuantity() < quantity){
+    public ProductDto updateStock(ProductDto product) {
+        ProductDto producto = getProduct(product.getProductId());
+        if (product.getQuantity() > producto.getQuantity()) {
             throw new BadRequestException("Stock insuficiente");
         }
-        product.setQuantity(product.getQuantity() - quantity);
+        product.setQuantity(producto.getQuantity() - product.getQuantity());
         productDao.save(productMapper.toEntity(product));
         return product;
     }

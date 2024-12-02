@@ -1,5 +1,6 @@
 package com.api.msventas.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 

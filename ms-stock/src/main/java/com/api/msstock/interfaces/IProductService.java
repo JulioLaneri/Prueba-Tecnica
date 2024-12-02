@@ -8,5 +8,5 @@ public interface IProductService {
     ProductDto createProduct(ProductDto product);
     ProductDto getProduct(String productId);
     List<ProductDto> getAllProducts();
-    ProductDto updateStock(String productId, Integer quantity);
+    ProductDto updateStock(ProductDto product);
 }
